@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The DevOps Project</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-image: url('kubernetes-logo.png');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+            color: #ffffff;
+            text-align: center;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            font-size: 40px; /* Slightly larger size */
+            margin-bottom: 10px;
+            display: inline-block;
+            background-color: rgba(0, 0, 0, 0.6);
+            padding: 5px;
+            border: 1px solid black; /* Black outline */
+        }
+
+        #main-content {
+            background-color: rgba(0, 0, 0, 0.6);
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px; /* Add some margin at the top to separate from the title */
+        }
+
+        form {
+            margin-top: 20px;
+        }
+
+        input[type="text"] {
+            padding: 8px;
+            font-size: 16px;
+        }
+
+        #output {
+            font-size: 18px;
+            margin-top: 10px;
+        }
+
+        button {
+            padding: 8px 20px;
+            background-color: #007bff;
+            color: #ffffff;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        #footer {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            font-size: 12px;
+        }
+
+        #name {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 14px;
+            color: #ffffff;
+        }
+
+        #contact-info {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            font-size: 14px;
+            color: #ffffff;
+            text-align: left;
+        }
+
+        #contact-info a {
+            color: #ffffff;
+            text-decoration: none;
+        }
+
+        #contact-info a.email {
+            font-weight: bold; /* Bold only the email link */
+        }
+
+        #contact-info a.linkedIn {
+            font-weight: bold; /* Bold only the LinkedIn link */
+        }
+
+        #contact-info a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <h1>The DevOps Project</h1>
+    <div id="main-content">
+        <form action="/saveinput" method="POST" onsubmit="handleSubmit(event)">
+            <label for="textInput">Type something:</label>
+            <input type="text" id="textInput" oninput="updateOutput()">
+            <p id="output"></p>
+            <button type="submit">Submit</button>
+        </form>
+        <p id="subtitle">Interactive Web Page</p>
+    </div>
+    <p id="footer">Nir Mizrahi</p>
+    <p id="name">by: Nir Mizrahi</p>
+    <div id="contact-info">
+        <p><strong>LinkedIn:</strong> <a href="https://www.linkedin.com/in/nir-mizrahi/" class="linkedIn" target="_blank">https://www.linkedin.com/in/nir-mizrahi/</a></p>
+        <p><strong>Email:</strong> <a href="mailto:nirmiz.work@gmail.com" class="email">nirmiz.work@gmail.com</a></p>
+    </div>
+
+    <script>
+        // Function to update output
+        function updateOutput() {
+            const inputElement = document.getElementById('textInput');
+            const outputElement = document.getElementById('output');
+            const inputValue = inputElement.value;
+
+            // Display the input value in the 'output' paragraph element
+            outputElement.textContent = inputValue;
+        }
+
+        // Function to handle form submission
+        function handleSubmit(event) {
+            event.preventDefault(); // Prevent form submission from refreshing the page
+            const inputElement = document.getElementById('textInput');
+            const inputValue = inputElement.value;
+
+            // Send the user input to the server using AJAX
+            fetch('/saveinput', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ inputValue })
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data.message); // Log the response from the server
+                // Clear the input field and displayed output after successfully sending the data
+                inputElement.value = '';
+                updateOutput();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+    </script>
+</body>
+</html>
